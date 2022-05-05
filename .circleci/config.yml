@@ -59,7 +59,7 @@ jobs:
           name: Testing repo location
           command: |
               echo "My current workspace is : $(pwd)" 
-              ls -la && ls -la .git
+              ls -la && ls -la ~/
               echo "BUILDING THE BACKEND ENVIRONMENT FILE"
 
 
