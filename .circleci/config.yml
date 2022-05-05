@@ -19,12 +19,11 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Clone Repo
+          name: Clone Quickstart Repo
           command: |
-            ls -la && pwd
             git clone https://github.com/snowplow/quickstart-examples.git
       - run: 
-          name: Patching Iglue Vars File
+          name: Patching Iglu Vars File
           command: |
             pwd && ls -la quickstart-examples
             bash -x ./scripts/patch_iglu_vars.sh
@@ -51,7 +50,7 @@ jobs:
               terraform init
               cat terraform.tfvars
               terraform validate
-              # terraform plan
+              terraform plan
 
 
     # executor: terraform/default
