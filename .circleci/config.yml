@@ -44,7 +44,7 @@ jobs:
       - save_cache:
           paths: 
             - ~/quickstart-examples/terraform/aws/iglu_server/default
-          key: quickstart-build-iglu-{{ .Branch }}-{{ .Revision }}
+          key: quickstart-build-iglu-{{ CIRCLE_WORKFLOW_ID:0:7 }}
 
 
 
@@ -55,12 +55,12 @@ jobs:
       - checkout
       - restore_cache:
           keys: 
-            - quickstart-build-iglu
+            - quickstart-build-iglu-{{ CIRCLE_WORKFLOW_ID:0:7 }}
       - run:
           name: Testing repo location
           command: |
               echo "My current workspace is : $(pwd)" 
-              ls -la 
+              ls -la && ls -la .git
               echo "BUILDING THE BACKEND ENVIRONMENT FILE"
 
 
