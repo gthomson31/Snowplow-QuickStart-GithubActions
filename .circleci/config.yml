@@ -55,6 +55,7 @@ jobs:
       - restore_cache:
           keys: 
             - iglu-build-default
+      - run:    
           name: Testing repo location
           command: |
               echo "My current workspace is : $(pwd)" 
