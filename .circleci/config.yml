@@ -21,8 +21,8 @@ jobs:
       - run:
           name: Clone Repo
           command: |
-          ls -la && pwd
-          git clone https://github.com/snowplow/quickstart-examples.git
+            ls -la && pwd
+            git clone https://github.com/snowplow/quickstart-examples.git
       - run: 
           name: Patching Iglue Vars File
           command: |
