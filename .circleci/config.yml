@@ -37,14 +37,14 @@ jobs:
 
       - run: 
           name: Patching Iglue Vars File
-          command: ./scripts/patch_iglu_vars.sh  
+          command: bash -ex ./scripts/patch_iglu_vars.sh  
       - run:
           name: Check Repo
           command: cat ~/quickstart-examples/terraform/aws/iglu_server/default/terraform.tfvars
       - save_cache:
           paths: 
             - ~/quickstart-examples/terraform/aws/iglu_server/default
-          key: quickstart-build-${CIRCLE_WORKFLOW_ID}
+          key: quickstart-build-${CIRCLE_WORKFLOW_ID:0:7}
 
 
 
