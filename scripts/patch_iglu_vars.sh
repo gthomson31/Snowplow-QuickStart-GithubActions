@@ -2,7 +2,7 @@
 
 # -- Navigate to the Repo 
 cd ~/quickstart-examples/terraform/aws && ls -la
-echo $ENV
+printenv
 # -- Find and replace for enviroment variables
 sed -i  's/prefix = .*/prefix = ${PREFIX}/g' iglu_server/default/terraform.tfvars
 sed -i  's/vpc_id            = .*/vpc_id = "${VPC_ID}"/g' iglu_server/default/terraform.tfvars
