@@ -32,7 +32,7 @@ jobs:
       - persist_to_workspace:
           root: workspace
           paths:
-            - /home/circleci/project/quickstart-examples/terraform/aws/iglu_server/default
+            - quickstart-examples
 
   iglu-server-build:
     docker:
