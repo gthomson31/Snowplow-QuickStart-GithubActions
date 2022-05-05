@@ -49,20 +49,34 @@ jobs:
 
 
   iglu-server-build:
-    executor: terraform/default
+    docker:
+      - image: cimg/base:stable
     steps:
       - checkout
       - restore_cache:
           keys: 
             - quickstart-build-iglu
       - attach_workspace:
-          at: ~/
-      - terraform/init:
-          path: "~/quickstart-build-iglu/"
-      - terraform/validate:
-          path: "."
-      - terraform/apply:
-          path: "."
+          at: ~/  
+      - run:
+          name: Testing repo location
+          command: pwd && ls -la 
+
+
+    # executor: terraform/default
+    # steps:
+    #   - checkout
+    #   - restore_cache:
+    #       keys: 
+    #         - quickstart-build-iglu
+    #   - attach_workspace:
+    #       at: ~/
+    #   - terraform/init:
+    #       path: "~/quickstart-build-iglu/"
+    #   - terraform/validate:
+    #       path: "."
+    #   - terraform/apply:
+    #       path: "."
 
 
 # Invoke jobs via workflows
