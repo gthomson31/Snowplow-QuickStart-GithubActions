@@ -45,9 +45,10 @@ jobs:
       - run:    
           name: Testing repo location
           command: |
+              cd /home/circleci/project/
               echo "My current workspace is : $(pwd)" 
-              ls -la /tmp/workspace
-              echo "BUILDING THE BACKEND ENVIRONMENT FILE"
+              ls -la /home/circleci/project/
+              echo "Lets Deploy the Server"
 
 
     # executor: terraform/default
