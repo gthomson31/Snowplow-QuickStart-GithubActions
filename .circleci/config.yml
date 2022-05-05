@@ -13,26 +13,11 @@ parameters:
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  git-repo:
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - checkout
-      - attach_workspace:
-          at: ~/
-      - run:
-          name: Clone Repo
-          command: git clone https://github.com/snowplow/quickstart-examples.git ~/quickstart-examples
-      - run:
-          name: Check Repo
-          command: cd ~/quickstart-examples && ls -la
-
   iglu-server-prep:
     docker:
       - image: cimg/base:stable
     steps:
       - checkout
-
       - run:
           name: Clone Repo
           command: git clone https://github.com/snowplow/quickstart-examples.git ~/quickstart-examples
@@ -47,6 +32,7 @@ jobs:
           key: iglu-build-default
 
       - persist_to_workspace:
+          root: workspace
           paths:
             - ~/quickstart-examples/terraform/aws/iglu_server/default
 
@@ -87,10 +73,7 @@ jobs:
 workflows:
   quickstart-workflow:
     jobs:
-      - git-repo
-      - iglu-server-prep:
-          requires:
-            - git-repo
+      - iglu-server-prep
       - iglu-server-build:
           requires:
             - iglu-server-prep
