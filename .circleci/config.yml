@@ -50,17 +50,17 @@ jobs:
 
   iglu-server-build:
     docker:
-      - image: cimg/base:stable
+      - image: hashicorp/terraform
     steps:
       - checkout
       - restore_cache:
           keys: 
             - quickstart-build-iglu
-      - attach_workspace:
-          at: ~/  
       - run:
           name: Testing repo location
-          command: pwd && ls -la 
+          command: |
+              echo "My current workspace is : $(pwd)" 
+              echo "BUILDING THE BACKEND ENVIRONMENT FILE"
 
 
     # executor: terraform/default
