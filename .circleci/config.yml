@@ -37,14 +37,13 @@ jobs:
           command: git clone https://github.com/snowplow/quickstart-examples.git ~/quickstart-examples
       - run: 
           name: Patching Iglue Vars File
-          command: bash -ex ./scripts/patch_iglu_vars.sh  
-      - run:
-          name: Check Repo
-          command: cat ~/quickstart-examples/terraform/aws/iglu_server/default/terraform.tfvars
+          command: |
+            bash -ex ./scripts/patch_iglu_vars.sh  
+            echo "Terrafom files have been patched with ENV Vars"
       - save_cache:
           paths: 
             - ~/quickstart-examples/terraform/aws/iglu_server/default
-          key: quickstart-build-iglu-{{ CIRCLE_WORKFLOW_ID:0:7 }}
+          key: quickstart-build-iglu-{{CIRCLE_WORKFLOW_ID:0:7}}
 
 
 
@@ -55,7 +54,7 @@ jobs:
       - checkout
       - restore_cache:
           keys: 
-            - quickstart-build-iglu-{{ CIRCLE_WORKFLOW_ID:0:7 }}
+            - quickstart-build-iglu-{{CIRCLE_WORKFLOW_ID:0:7}}
       - run:
           name: Testing repo location
           command: |
