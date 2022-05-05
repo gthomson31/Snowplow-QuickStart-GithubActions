@@ -4,7 +4,7 @@
 cd ~/quickstart-examples/terraform/aws && ls -la
 printenv
 # -- Find and replace for enviroment variables
-sed -i  's/prefix = .*/prefix = ${PREFIX}/g' iglu_server/default/terraform.tfvars
+sed -i  "s/prefix = .*/prefix = ${PREFIX}/g" iglu_server/default/terraform.tfvars
 sed -i  's/vpc_id            = .*/vpc_id = "${VPC_ID}"/g' iglu_server/default/terraform.tfvars
 sed -i  's/public_subnet_ids = .*/public_subnet_ids = ["${PUBLIC_SUBNET_1}","${PUBLIC_SUBNET_2}"]/g' iglu_server/default/terraform.tfvars
 sed -i  's/ssh_ip_allowlist = .*/ssh_ip_allowlist = ["${ALLOWED_IP}"]/g' iglu_server/default/terraform.tfvars
