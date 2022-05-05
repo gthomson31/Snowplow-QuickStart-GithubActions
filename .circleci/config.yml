@@ -2,6 +2,8 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
+orbs: 
+  terraform: circleci/terraform@3.0.1
 
 parameters:
   workflow-id:
@@ -29,8 +31,7 @@ jobs:
       - image: cimg/base:stable
     steps:
       - checkout
-      - attach_workspace:
-          at: ~/
+
       - run:
           name: Clone Repo
           command: git clone https://github.com/snowplow/quickstart-examples.git ~/quickstart-examples
@@ -44,7 +45,7 @@ jobs:
       - save_cache:
           paths: 
             - ~/quickstart-examples/terraform/aws/iglu_server/default
-          key: quickstart-build-${CIRCLE_WORKFLOW_ID:0:7}
+          key: quickstart-build-iglu
 
 
 
@@ -52,17 +53,20 @@ jobs:
 
 
 
-  # iglu-server-build:
-  #   docker:
-  #     - image: cimg/base:stable
-  #   steps:
-  #     - checkout
-  #         name: Check Repo
-  #         command: cat ~/quickstart-examples/terraform/aws/iglu_server/default/terraform.tfvars
-  #     - save_cache:
-  #         paths: 
-  #           - ~/quickstart-examples/terraform/aws/iglu_server/default
-  #         key: quickstart-build-${CIRCLE_WORKFLOW_ID}
+  iglu-server-build:
+    executor: terraform/default
+    working_directory: "~/src"
+    steps:
+      - checkout
+      - restore_cache:
+          keys: 
+            - quickstart-build-iglu
+      - terraform/init:
+          path: "quickstart-build-iglu"
+      - terraform/validate:
+          path: "quickstart-build-iglu"
+      - terraform/apply:
+          path: "quickstart-build-iglu"
 
 
 # Invoke jobs via workflows
@@ -74,7 +78,7 @@ workflows:
       - iglu-server-prep:
           requires:
             - git-repo
-      # - iglu-server-build:
-      #     requires:
-      #       - iglu-server-prep
+      - iglu-server-build:
+          requires:
+            - iglu-server-prep
 
