@@ -33,24 +33,38 @@ jobs:
           paths:
             - quickstart-examples
 
+  # iglu-server-build:
+  #   docker:
+  #     - image: hashicorp/terraform:1.0.0
+  #   steps:
+  #     - checkout
+  #     - attach_workspace:
+  #         # Must be absolute path or relative path from working_directory
+  #         at: /home/circleci/project
+  #     - run:    
+  #         name: Testing repo location
+  #         command: |
+  #             cd /home/circleci/project/quickstart-examples/terraform/aws/iglu_server/default
+  #             echo "My current workspace is : $(pwd)" 
+  #             echo "Lets Deploy the Server"
+  #             terraform init
+  #             cat terraform.tfvars
+  #             terraform validate
+  #             terraform plan
   iglu-server-build:
-    docker:
-      - image: hashicorp/terraform:1.0.0
+    executor: terraform/default
     steps:
-      - checkout
       - attach_workspace:
           # Must be absolute path or relative path from working_directory
-          at: /home/circleci/project
-      - run:    
-          name: Testing repo location
-          command: |
-              cd /home/circleci/project/quickstart-examples/terraform/aws/iglu_server/default
-              echo "My current workspace is : $(pwd)" 
-              echo "Lets Deploy the Server"
-              terraform init
-              cat terraform.tfvars
-              terraform validate
-              terraform plan
+          at: /home/circleci/project   
+    working_directory: /home/circleci/project/quickstart-examples/terraform/aws/iglu_server/default
+      - checkout
+      - terraform/init:
+          path: .
+      - terraform/validate:
+          path: .
+      - terraform/plan:
+          path: .    
 
 
     # executor: terraform/default
