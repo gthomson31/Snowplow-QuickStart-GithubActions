@@ -20,17 +20,14 @@ jobs:
       - checkout
       - run:
           name: Clone Repo
-          command: git clone https://github.com/snowplow/quickstart-examples.git ~/quickstart-examples
+          command: |
+          ls -la && pwd
+          git clone https://github.com/snowplow/quickstart-examples.git
       - run: 
           name: Patching Iglue Vars File
           command: |
             bash -ex ./scripts/patch_iglu_vars.sh  
             echo "Terrafom files have been patched with ENV Vars"
-      - save_cache:
-          paths: 
-            - ~/quickstart-examples/terraform/aws/iglu_server/default
-          key: iglu-build-default
-
       - persist_to_workspace:
           root: workspace
           paths:
