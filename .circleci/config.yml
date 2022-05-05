@@ -36,9 +36,8 @@ jobs:
           command: git clone https://github.com/snowplow/quickstart-examples.git ~/quickstart-examples
       - run: 
           name: Change into the Repo and Update Vars
-          command: cd ~/quickstart-examples/terraform/aws
-
       - run: |
+          cd ~/quickstart-examples/terraform/aws
           sed -i '' 's/prefix = .*/prefix = $PREFIX/g' iglu_server/default/terraform.tfvars
           sed -i '' 's/vpc_id            = .*/vpc_id = "$VPC_ID"/g' iglu_server/default/terraform.tfvars
           sed -i '' 's/public_subnet_ids = .*/public_subnet_ids = ["$PUBLIC_SUBNET_1","$PUBLIC_SUBNET_2"]/g' iglu_server/default/terraform.tfvars
