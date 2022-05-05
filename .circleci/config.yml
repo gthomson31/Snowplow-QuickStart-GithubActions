@@ -35,7 +35,6 @@ jobs:
       - run:
           name: Clone Repo
           command: git clone https://github.com/snowplow/quickstart-examples.git ~/quickstart-examples
-
       - run: 
           name: Patching Iglue Vars File
           command: bash -ex ./scripts/patch_iglu_vars.sh  
@@ -49,24 +48,21 @@ jobs:
 
 
 
-
-
-
-
   iglu-server-build:
     executor: terraform/default
-    working_directory: "~/src"
     steps:
       - checkout
       - restore_cache:
           keys: 
             - quickstart-build-iglu
+      - attach_workspace:
+          at: ~/
       - terraform/init:
-          path: "quickstart-build-iglu"
+          path: "."
       - terraform/validate:
-          path: "quickstart-build-iglu"
+          path: "."
       - terraform/apply:
-          path: "quickstart-build-iglu"
+          path: "."
 
 
 # Invoke jobs via workflows
