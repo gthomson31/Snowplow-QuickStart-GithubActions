@@ -58,7 +58,7 @@ jobs:
       - attach_workspace:
           at: ~/
       - terraform/init:
-          path: "."
+          path: "~/quickstart-build-iglu/"
       - terraform/validate:
           path: "."
       - terraform/apply:
