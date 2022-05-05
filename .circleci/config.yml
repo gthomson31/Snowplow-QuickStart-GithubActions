@@ -26,6 +26,7 @@ jobs:
       - run:
           name: Check Repo
           command: cd ~/quickstart-examples && ls -la
+
   iglu-server-prep:
     docker:
       - image: cimg/base:stable
@@ -45,21 +46,23 @@ jobs:
             - ~/quickstart-examples/terraform/aws/iglu_server/default
           key: iglu-build-default
 
-
+      - persist_to_workspace:
+          paths:
+            - ~/quickstart-examples/terraform/aws/iglu_server/default
 
   iglu-server-build:
     docker:
       - image: hashicorp/terraform
     steps:
       - checkout
-      - restore_cache:
-          keys: 
-            - iglu-build-default
+      - attach_workspace:
+          # Must be absolute path or relative path from working_directory
+          at: /tmp/workspace
       - run:    
           name: Testing repo location
           command: |
               echo "My current workspace is : $(pwd)" 
-              ls -la && ls -la ~/
+              ls -la /tmp/workspace
               echo "BUILDING THE BACKEND ENVIRONMENT FILE"
 
 
