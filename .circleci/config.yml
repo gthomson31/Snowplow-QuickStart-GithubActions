@@ -60,11 +60,11 @@ jobs:
     working_directory: /home/circleci/project/quickstart-examples/terraform/aws/iglu_server/default
       - checkout
       - terraform/init:
-          path: .
+          path: /home/circleci/project/quickstart-examples/terraform/aws/iglu_server/default
       - terraform/validate:
-          path: .
+          path: /home/circleci/project/quickstart-examples/terraform/aws/iglu_server/default
       - terraform/plan:
-          path: .    
+          path: /home/circleci/project/quickstart-examples/terraform/aws/iglu_server/default   
 
 
     # executor: terraform/default
