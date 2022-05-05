@@ -43,7 +43,7 @@ jobs:
       - save_cache:
           paths: 
             - ~/quickstart-examples/terraform/aws/iglu_server/default
-          key: quickstart-build-iglu-{{CIRCLE_WORKFLOW_ID:0:7}}
+          key: iglu-build-default
 
 
 
@@ -54,8 +54,7 @@ jobs:
       - checkout
       - restore_cache:
           keys: 
-            - quickstart-build-iglu-{{CIRCLE_WORKFLOW_ID:0:7}}
-      - run:
+            - iglu-build-default
           name: Testing repo location
           command: |
               echo "My current workspace is : $(pwd)" 
