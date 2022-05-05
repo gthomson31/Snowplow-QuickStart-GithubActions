@@ -6,12 +6,8 @@ version: 2.1
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
   git-repo:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
     docker:
       - image: cimg/base:stable
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - checkout
       - attach_workspace:
@@ -22,6 +18,24 @@ jobs:
       - run:
           name: Check Repo
           command: cd ~/quickstart-examples && ls -la
+  iglu-server:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/
+      - run: 
+          name: Populate Vars
+          cd ~/quickstart-examples/terraform/aws && sed -i '' 's/ssh_public_key = .*/ssh_public_key = xxx/g' iglu_server/default/terraform.tfvars
+
+      - run:
+          name: Check Repo
+          command: cat iglu_server/default/terraform.tfvars
+
+
+
+
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
@@ -29,3 +43,13 @@ workflows:
   say-hello-workflow:
     jobs:
       - git-repo
+      - iglu-server:
+          requires:
+            git-repo
+      
+
+
+
+
+
+sed -i '' 's/iglu_db_name     = "iglu"/iglu_db_name   = $IGLU_DB_NAME /g' quickstart-examples/terraform/aws/iglu_server/default/terraform
