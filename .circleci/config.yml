@@ -44,7 +44,7 @@ jobs:
       - save_cache:
           paths: 
             - ~/quickstart-examples/terraform/aws/iglu_server/default
-          key: quickstart-build-iglu
+          key: quickstart-build-iglu-{{ .Branch }}-{{ .Revision }}
 
 
 
