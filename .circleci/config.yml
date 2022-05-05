@@ -27,8 +27,8 @@ jobs:
           name: Patching Iglue Vars File
           command: |
             pwd && ls -la quickstart-examples
-            ./scripts/patch_iglu_vars.sh
-            echo "Terrafom files have been patched with ENV Vars"
+            bash -x ./scripts/patch_iglu_vars.sh
+            echo "Terraform files have been patched with ENV Vars"
       - persist_to_workspace:
           root: /home/circleci/project
           paths:
