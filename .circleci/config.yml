@@ -45,10 +45,11 @@ jobs:
       - run:    
           name: Testing repo location
           command: |
-              cd /home/circleci/project/
+              cd /home/circleci/project/quickstart-examples/terraform/aws/iglu_server/default
               echo "My current workspace is : $(pwd)" 
-              ls -la /home/circleci/project/
               echo "Lets Deploy the Server"
+              terraform init
+              terraform plan
 
 
     # executor: terraform/default
