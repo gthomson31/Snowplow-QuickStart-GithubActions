@@ -49,7 +49,9 @@ jobs:
               echo "My current workspace is : $(pwd)" 
               echo "Lets Deploy the Server"
               terraform init
-              terraform plan
+              cat terraform.tfvars
+              terraform validate
+              # terraform plan
 
 
     # executor: terraform/default
