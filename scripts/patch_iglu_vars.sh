@@ -1,7 +1,7 @@
 #! /bin/sh
 
 # -- Navigate to the Repo 
-cd /home/circleci/project/quickstart-examples/terraform/aws && pwd
+cd quickstart-examples/terraform/aws && pwd
 
 # -- Find and replace for enviroment variables
 sed -i  "s|prefix = .*|prefix = $PREFIX|" iglu_server/default/terraform.tfvars
