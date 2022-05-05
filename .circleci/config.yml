@@ -26,12 +26,13 @@ jobs:
       - run: 
           name: Patching Iglue Vars File
           command: |
+            pwd && ls -la
             bash -ex ./scripts/patch_iglu_vars.sh  
             echo "Terrafom files have been patched with ENV Vars"
       - persist_to_workspace:
           root: workspace
           paths:
-            - ~/quickstart-examples/terraform/aws/iglu_server/default
+            - quickstart-examples/terraform/aws/iglu_server/default
 
   iglu-server-build:
     docker:
