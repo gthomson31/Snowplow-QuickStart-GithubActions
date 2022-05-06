@@ -168,7 +168,7 @@ jobs:
               echo "My current workspace is : $(pwd)" 
               echo "Lets Deploy the Server"
               terraform init
-              terraform destroy -force
+              terraform destroy -auto-approve
 
   pipeline-destroy:
     docker:
@@ -185,7 +185,7 @@ jobs:
               echo "My current workspace is : $(pwd)" 
               echo "Lets Deploy the Server"
               terraform init
-              terraform destroy -force
+              terraform destroy -auto-approve
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
