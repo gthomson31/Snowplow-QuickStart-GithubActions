@@ -63,6 +63,10 @@ jobs:
       - attach_workspace:
           # Must be absolute path or relative path from working_directory
           at: /home/circleci/project
+      - run:
+          name: Install utils
+          command: |
+            yum install -y tar gzip java       
       - run:    
           name: Installing IgluCLI
           command: |
