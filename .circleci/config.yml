@@ -9,8 +9,6 @@ parameters:
   workflow-id:
     type: string
     default: "${CIRCLE_WORKFLOW_ID:0:7}"
-
-parameters:
   tear_down_enviroment:
     type: boolean
     default: false
