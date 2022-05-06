@@ -25,9 +25,14 @@ jobs:
       - run: 
           name: Patching Iglu Vars File
           command: |
-            pwd && ls -la quickstart-examples
             bash -x ./scripts/patch_iglu_vars.sh
             echo "Terraform files have been patched with ENV Vars"
+      - run: 
+          name: Patching Terraform Versions File
+          command: |
+            cp terraform_files/versions.tf quickstart-examples/terraform/aws/iglu_server/default/versions.tf
+            cat quickstart-examples/terraform/aws/iglu_server/default/versions.tf
+            echo "Terraform version file has been patched to save state to S3"
       - persist_to_workspace:
           root: /home/circleci/project
           paths:
@@ -48,13 +53,38 @@ jobs:
               echo "My current workspace is : $(pwd)" 
               echo "Lets Deploy the Server"
               terraform init
-              terraform apply -auto-approve
+              terraform plan
+              # terraform apply -auto-approve
 
+  iglu-server-seeding:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - attach_workspace:
+          # Must be absolute path or relative path from working_directory
+          at: /home/circleci/project
+      - run:    
+          name: Installing IgluCLI
+          command: |
+              cd /home/circleci/project/quickstart-examples/terraform/aws/iglu_server/default
+              wget https://github.com/snowplow-incubator/igluctl/releases/download/0.8.1/igluctl_0.8.1.zip
+              unzip igluctl_0.8.1.zip
+              chmod +x igluctl
+              ./igluctl --version
+      - run:    
+          name: Seed Iglu Server 
+          command: |
+              cd /home/circleci/project/quickstart-examples/terraform/aws/iglu_server/default
+              wget https://github.com/snowplow-incubator/igluctl/releases/download/0.8.1/igluctl_0.8.1.zip
+              unzip igluctl_0.8.1.zip
+              chmod +x igluctl
+              ./igluctl --versio
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  quickstart-workflow:
+  quickstart-pipeline-deployment:
     jobs:
       - iglu-server-prep
       - iglu-server-build:
