@@ -75,7 +75,7 @@ jobs:
       - run:
           name: Install utils
           command: |
-            yum install -y tar unzip java wget git 
+            apt-get install -y tar unzip java wget git 
       - attach_workspace:
           # Must be absolute path or relative path from working_directory
           at: /home/circleci/project    
