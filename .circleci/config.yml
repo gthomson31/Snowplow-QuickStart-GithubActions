@@ -75,7 +75,7 @@ jobs:
       - run:
           name: Install utils
           command: |
-            apt-get install -y tar unzip java wget git 
+            microdnf install -y tar unzip java wget git 
       - attach_workspace:
           # Must be absolute path or relative path from working_directory
           at: /home/circleci/project    
@@ -92,7 +92,7 @@ jobs:
           name: Seed Iglu Server 
           command: |
               git clone https://github.com/snowplow/iglu-central /home/circleci/iglu-central
-              cd iglu-central
+              cd /home/circleci/iglu-central
               export IGLU_URL=$(cat /home/circleci/project/terraform_outputs/iglu_server.txt| sed 's/"//g')
               igluctl static push --public schemas/ http://$IGLU_URL $IGLU_API_KEY
 
