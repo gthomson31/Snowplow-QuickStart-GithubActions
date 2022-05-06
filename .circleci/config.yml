@@ -13,7 +13,7 @@ parameters:
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  iglu-server-prep:
+  iglu-variable-prep:
     docker:
       - image: cimg/base:stable
     steps:
@@ -96,7 +96,30 @@ jobs:
               export IGLU_URL=$(cat /home/circleci/project/terraform_outputs/iglu_server.txt| sed 's/"//g')
               igluctl static push --public schemas/ http://$IGLU_URL $IGLU_API_KEY
 
-
+  pipeline-variable-prep:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - run:
+          name: Clone Quickstart Repo
+          command: |
+            git clone https://github.com/snowplow/quickstart-examples.git
+      - run: 
+          name: Patching Iglu Vars File
+          command: |
+            bash -x ./scripts/patch_pipeline_vars.sh
+            echo "Terraform files have been patched with ENV Vars"
+      - run: 
+          name: Patching Terraform Versions File
+          command: |
+            cp terraform_files/versions.tf quickstart-examples/terraform/aws/iglu_server/default/versions.tf
+            cat quickstart-examples/terraform/aws/iglu_server/default/versions.tf
+            echo "Terraform version file has been patched to save state to S3"
+      - persist_to_workspace:
+          root: /home/circleci/project
+          paths:
+            - quickstart-examples
 
 
 
@@ -106,10 +129,13 @@ jobs:
 workflows:
   quickstart-pipeline-deployment:
     jobs:
-      - iglu-server-prep
+      - iglu-variable-prep
       - iglu-server-build:
           requires:
             - iglu-server-prep
       - iglu-server-seed:
+          requires:
+            - iglu-server-build
+      - pipeline-variable-prep
           requires:
             - iglu-server-build
