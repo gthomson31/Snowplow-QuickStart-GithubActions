@@ -132,7 +132,7 @@ workflows:
       - iglu-variable-prep
       - iglu-server-build:
           requires:
-            - iglu-server-prep
+            - iglu-variable-prep
       - iglu-server-seed:
           requires:
             - iglu-server-build
