@@ -54,6 +54,14 @@ jobs:
               echo "Lets Deploy the Server"
               terraform init
               terraform apply -auto-approve
+      - run:
+          name: Creating Terraform Outputs
+          command: |
+            echo $(terraform output --json) > /tmp/terraform_outputs_iglu;
+
+      - store_artifacts:
+          path: /tmp/terraform_outputs_iglu
+          destination: artifact-file
 
   iglu-server-seed:
     docker:
@@ -63,7 +71,7 @@ jobs:
       - run:
           name: Install utils
           command: |
-            yum install -y tar gzip java 
+            yum install -y tar unzip java 
       - attach_workspace:
           # Must be absolute path or relative path from working_directory
           at: /home/circleci/project      
@@ -80,6 +88,10 @@ jobs:
           command: |
               cd /home/circleci/project/quickstart-examples/terraform/aws/iglu_server/default
               ./igluctl --version
+
+
+
+
 
 
 # Invoke jobs via workflows
