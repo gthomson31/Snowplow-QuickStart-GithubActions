@@ -6,7 +6,7 @@ terraform {
     bucket         = "poppy-sandbox-terraform-state"
     dynamodb_table = "sandbox-terraform-lock"
     region         = "eu-west-2"
-    key            = "terraform.tfstate"
+    key            = "stacks_aws_setup.tfstate"
   }
   
   required_providers {
