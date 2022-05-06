@@ -121,8 +121,32 @@ jobs:
           paths:
             - quickstart-examples
 
-
-
+  pipeline-build:
+    docker:
+      - image: hashicorp/terraform:1.0.0
+    steps:
+      - checkout
+      - attach_workspace:
+          # Must be absolute path or relative path from working_directory
+          at: /home/circleci/project
+      - run:    
+          name: Deploying Terraform 
+          command: |
+              cd /home/circleci/project/quickstart-examples/terraform/aws/pipeline/default
+              echo "My current workspace is : $(pwd)" 
+              echo "Lets Deploy the Server"
+              terraform init
+              terraform apply -auto-approve
+      - run:
+          name: Storing Terraform Outputs
+          command: |
+            cd /home/circleci/project/quickstart-examples/terraform/aws/pipeline/default
+            echo $(terraform output) > /home/circleci/project/terraform_outputs/pipeline_deployment.txt
+            cat /home/circleci/project/terraform_outputs/pipeline_deployment.txt
+      - persist_to_workspace:
+          root: /home/circleci/project
+          paths:
+            - terraform_outputs
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
@@ -139,3 +163,6 @@ workflows:
       - pipeline-variable-prep:
           requires:
             - iglu-server-build
+      - pipeline-build:
+          requires:
+            - pipeline-variable-prep
