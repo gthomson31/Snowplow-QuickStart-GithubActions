@@ -10,6 +10,11 @@ parameters:
     type: string
     default: "${CIRCLE_WORKFLOW_ID:0:7}"
 
+parameters:
+  tear_down_enviroment:
+    type: boolean
+    default: false
+
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
@@ -148,10 +153,49 @@ jobs:
           paths:
             - terraform_outputs
 
+
+
+  iglu-destroy:
+    docker:
+      - image: hashicorp/terraform:1.0.0
+    steps:
+      - checkout
+      - attach_workspace:
+          # Must be absolute path or relative path from working_directory
+          at: /home/circleci/project
+      - run:    
+          name: Deploying Terraform 
+          command: |
+              cd /home/circleci/project/quickstart-examples/terraform/aws/iglu_server/default
+              echo "My current workspace is : $(pwd)" 
+              echo "Lets Deploy the Server"
+              terraform init
+              terraform destroy -force
+
+  pipeline-destroy:
+    docker:
+      - image: hashicorp/terraform:1.0.0
+    steps:
+      - checkout
+      - attach_workspace:
+          # Must be absolute path or relative path from working_directory
+          at: /home/circleci/project
+      - run:    
+          name: Deploying Terraform 
+          command: |
+              cd /home/circleci/project/quickstart-examples/terraform/aws/pipeline/default
+              echo "My current workspace is : $(pwd)" 
+              echo "Lets Deploy the Server"
+              terraform init
+              terraform destroy -force
+
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
+
+
   quickstart-pipeline-deployment:
+    when: << pipeline.parameters.tear_down_enviroment>>
     jobs:
       - iglu-variable-prep
       - iglu-server-build:
@@ -166,3 +210,7 @@ workflows:
       - pipeline-build:
           requires:
             - pipeline-variable-prep
+    else:
+    jobs:
+      - pipeline-destroy
+      - iglu-destroy
