@@ -69,7 +69,7 @@ jobs:
 
   iglu-server-seed:
     docker:
-      - image: amazon/aws-cli
+      - image: openjdk
     steps:
       - checkout
       - run:
@@ -91,7 +91,7 @@ jobs:
       - run:    
           name: Seed Iglu Server 
           command: |
-              git clone https://github.com/snowplow/iglu-central
+              git clone https://github.com/snowplow/iglu-central /home/circleci/iglu-central
               cd iglu-central
               export IGLU_URL=$(cat /home/circleci/project/terraform_outputs/iglu_server.txt| sed 's/"//g')
               igluctl static push --public schemas/ http://$IGLU_URL $IGLU_API_KEY
