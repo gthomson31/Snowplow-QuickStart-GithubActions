@@ -57,13 +57,13 @@ jobs:
       - run:
           name: Creating Terraform Outputs
           command: |
-            mkdir /tmp/terraform_outputs
-            echo $(terraform output iglu_server_dns_name) > /tmp/terraform_outputs/iglu_server.txt
+            mkdir terraform_outputs
+            echo $(terraform output iglu_server_dns_name) > terraform_outputs/iglu_server.txt
             cat /tmp/terraform_outputs/iglu_server.txt
       - persist_to_workspace:
           root: /home/circleci/project
           paths:
-            - /tmp/terraform_outputs
+            - terraform_outputs
 
   iglu-server-seed:
     docker:
