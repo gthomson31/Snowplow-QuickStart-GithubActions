@@ -85,13 +85,15 @@ jobs:
               wget https://github.com/snowplow-incubator/igluctl/releases/download/0.8.1/igluctl_0.8.1.zip
               unzip igluctl_0.8.1.zip
               chmod +x igluctl
-              ./igluctl --version
+              sudo cp igluctl /usr/local/bin/
+              igluctl --version
       - run:    
           name: Seed Iglu Server 
           command: |
-              cd /home/circleci/project/quickstart-examples/terraform/aws/iglu_server/default
+              git clone https://github.com/snowplow/iglu-central
+              cd iglu-central
               export IGLU_URL=$(cat /home/circleci/project/terraform_outputs/iglu_server.txt| sed 's/"//g')
-              ./igluctl static push --public schemas/ http://$IGLU_URL $IGLU_API_KEY
+              igluctl static push --public schemas/ http://$IGLU_URL $IGLU_API_KEY
 
 
 
