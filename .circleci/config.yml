@@ -212,6 +212,18 @@ workflows:
   quickstart-pipeline-teardown:
     when:
         equal: [ false, << pipeline.parameters.build_enviroment>> ]
-    jobs:
-      - pipeline-destroy
-      - iglu-destroy
+    jobs:     
+      - iglu-variable-prep
+      - iglu-server-build:
+          requires:
+            - iglu-variable-prep
+      - iglu-destroy:
+          requires:
+            - iglu-server-build     
+      - pipeline-variable-prep:
+          requires:
+            - iglu-server-build
+      - pipeline-destroy:
+          requires:
+            - pipeline-variable-prep
+      
