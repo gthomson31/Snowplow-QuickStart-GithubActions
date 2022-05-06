@@ -69,7 +69,7 @@ jobs:
 
   iglu-server-seed:
     docker:
-      - image: openjdk
+      - image: openjdk:oraclelinux8
     steps:
       - checkout
       - run:
