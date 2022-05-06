@@ -39,6 +39,12 @@ variable "enable_vpn_gateway" {
   default     = true
 }
 
+variable "enable_dns_hostnames" {
+  description = "The list of private subnets to deploy the components across"
+  type        = bool
+  default     = true
+}
+
 variable "iam_permissions_boundary" {
   description = "The permissions boundary ARN to set on IAM roles created"
   default     = ""

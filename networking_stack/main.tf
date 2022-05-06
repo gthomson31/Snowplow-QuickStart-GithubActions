@@ -11,6 +11,7 @@ module "vpc" {
   enable_nat_gateway = var.enable_nat_gateway
   enable_vpn_gateway = var.enable_vpn_gateway
   
+
   tags = {
     Terraform = "true"
     Environment = "${var.prefix}-sandbox"
