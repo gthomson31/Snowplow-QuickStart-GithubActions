@@ -30,7 +30,7 @@ jobs:
       - run: 
           name: Patching Terraform Versions File
           command: |
-            cp terraform_files/versions.tf quickstart-examples/terraform/aws/iglu_server/default/versions.tf
+            cp terraform_files/iglu/versions.tf quickstart-examples/terraform/aws/iglu_server/default/versions.tf
             cat quickstart-examples/terraform/aws/iglu_server/default/versions.tf
             echo "Terraform version file has been patched to save state to S3"
       - persist_to_workspace:
@@ -113,8 +113,8 @@ jobs:
       - run: 
           name: Patching Terraform Versions File
           command: |
-            cp terraform_files/versions.tf quickstart-examples/terraform/aws/iglu_server/default/versions.tf
-            cat quickstart-examples/terraform/aws/iglu_server/default/versions.tf
+            cp terraform_files/pipeline/versions.tf quickstart-examples/terraform/aws/pipeline/default/versions.tf
+            cat quickstart-examples/terraform/aws/pipeline/default/versions.tf
             echo "Terraform version file has been patched to save state to S3"
       - persist_to_workspace:
           root: /home/circleci/project
