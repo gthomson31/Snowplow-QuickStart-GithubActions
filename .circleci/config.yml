@@ -59,7 +59,7 @@ jobs:
           command: |
             mkdir terraform_outputs
             echo $(terraform output iglu_server_dns_name) > terraform_outputs/iglu_server.txt
-            cat /tmp/terraform_outputs/iglu_server.txt
+            cat terraform_outputs/iglu_server.txt
       - persist_to_workspace:
           root: /home/circleci/project
           paths:
