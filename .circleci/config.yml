@@ -57,11 +57,13 @@ jobs:
       - run:
           name: Creating Terraform Outputs
           command: |
-            echo $(terraform output --json) > /tmp/terraform_outputs_iglu;
-
-      - store_artifacts:
-          path: /tmp/terraform_outputs_iglu
-          destination: artifact-file
+            mkdir /tmp/terraform_outputs
+            echo $(terraform output iglu_server_dns_name) > /tmp/terraform_outputs/iglu_server.txt
+            cat /tmp/terraform_outputs/iglu_server.txt
+      - persist_to_workspace:
+          root: /home/circleci/project
+          paths:
+            - /tmp/terraform_outputs
 
   iglu-server-seed:
     docker:
@@ -71,7 +73,7 @@ jobs:
       - run:
           name: Install utils
           command: |
-            yum install -y tar unzip java 
+            yum install -y tar unzip java wget
       - attach_workspace:
           # Must be absolute path or relative path from working_directory
           at: /home/circleci/project      
@@ -87,7 +89,7 @@ jobs:
           name: Seed Iglu Server 
           command: |
               cd /home/circleci/project/quickstart-examples/terraform/aws/iglu_server/default
-              ./igluctl --version
+              igluctl static push --public schemas/ http://CHANGE-TO-MY-IGLU-URL.elb.amazonaws.com 00000000-0000-0000-0000-000000000000
 
 
 
