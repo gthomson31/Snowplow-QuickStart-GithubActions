@@ -60,13 +60,13 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
-      - attach_workspace:
-          # Must be absolute path or relative path from working_directory
-          at: /home/circleci/project
       - run:
           name: Install utils
           command: |
-            yum install -y tar gzip java       
+            yum install -y tar gzip java 
+      - attach_workspace:
+          # Must be absolute path or relative path from working_directory
+          at: /home/circleci/project      
       - run:    
           name: Installing IgluCLI
           command: |
