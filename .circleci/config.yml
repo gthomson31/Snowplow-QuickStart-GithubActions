@@ -57,7 +57,7 @@ jobs:
 
   iglu-server-seed:
     docker:
-      - image: cimg/openjdk
+      - image: amazon/aws-cli
     steps:
       - checkout
       - attach_workspace:
