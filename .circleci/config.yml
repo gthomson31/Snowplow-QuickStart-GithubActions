@@ -136,6 +136,6 @@ workflows:
       - iglu-server-seed:
           requires:
             - iglu-server-build
-      - pipeline-variable-prep
+      - pipeline-variable-prep:
           requires:
             - iglu-server-build
