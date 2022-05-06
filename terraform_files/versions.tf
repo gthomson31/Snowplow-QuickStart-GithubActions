@@ -3,8 +3,8 @@ terraform {
 
   backend "s3" {
     encrypt        = true
-    bucket         = "snowplow-terraform-state"
-    dynamodb_table = "snowplow-terraform-lock"
+    bucket         = "poppy-sandbox-terraform-state"
+    dynamodb_table = "sandbox-terraform-lock"
     region         = "eu-west-2"
     key            = "stacks_aws_setup.tfstate"
   }
