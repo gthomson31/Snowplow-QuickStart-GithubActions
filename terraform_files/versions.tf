@@ -5,7 +5,7 @@ terraform {
     encrypt        = true
     bucket         = "snowplow-terraform-state"
     dynamodb_table = "snowplow-terraform-lock"
-    region         = local.region
+    region         = "eu-west-2"
     key            = "stacks_aws_setup.tfstate"
   }
   
