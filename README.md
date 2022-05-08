@@ -17,9 +17,7 @@
 *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
-[![CircleCI](https://circleci.com/gh/gthomson31/snowplow-os-pipeline/tree/main.svg?style=svg&circle-token=a8da9c2ff2e2620cd76405fd6efc7c5c8083c459)](https://circleci.com/gh/gthomson31/snowplow-os-pipeline/tree/main)
-
-
+[![CircleCI](https://circleci.com/gh/gthomson31/snowplow-os-pipeline/tree/main.svg?style=svg&circle-token=ca8e88fc7341936af72be57891b5ac056a40ce9a)](https://circleci.com/gh/gthomson31/snowplow-os-pipeline/tree/main)
 
 <!-- PROJECT LOGO -->
 ![Snowplow Logo](./media/snowplow_logo.png)
@@ -120,42 +118,41 @@ In order to use this project effectivly you will first need to follow the prereq
 
 ### Installation
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/your_username_/Project-Name.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
+# High Level Steps more Detail to follow 
+
+1. Fork the github directory
+2. Follow the project within CircleCI utilising the exisiting Config.yml file
+3. Deploy the Prerequisite terraform stacks to deploy the required networks/dynamodb
+4. Update the Terraform Versions terraform_files/(iglu/pipeline)versions.tf with dyanmoDB details
+5. Create the following enviroment variables within CircleCI
+  ```
+    ALLOWED_IP	
+    AWS_ACCESS_KEY_ID	
+    AWS_DEFAULT_REGION
+    AWS_SECRET_ACCESS_KEY	 
+    IGLU_API_KEY	
+    IGLU_DB_PASSWORD
+    PREFIX
+    PUBLIC_SUBNET_1	
+    PUBLIC_SUBNET_2	
+    S3_DATA_BUCKET
+    SSH_PUBLIC_KEY
+    VPC_ID
+  ```
+  Optional variable depending on AWS Deployment.
+  ```
+    IAM_PERMISSIONS_BOUNDRY
+  ```
+
+6. Commit and push your changes to kick of the deployment. 🚀
+
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-The following Enviroment Variables must be configured within CircleCI 
-```
-  ALLOWED_IP	
-  AWS_ACCESS_KEY_ID	
-  AWS_DEFAULT_REGION
-  AWS_SECRET_ACCESS_KEY	 
-  IGLU_API_KEY	
-  IGLU_DB_PASSWORD
-  PREFIX
-  PUBLIC_SUBNET_1	
-  PUBLIC_SUBNET_2	
-  S3_DATA_BUCKET
-  SSH_PUBLIC_KEY
-  VPC_ID
-```
 
-Optional variable depending on AWS Deployment.
-```
-  IAM_PERMISSIONS_BOUNDRY
-```
+
+
+
 <!-- USAGE EXAMPLES -->
 ## Usage
 
@@ -173,6 +170,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 - [x] Create Initial AWS Default Iglu Deployment
 - [x] Create Initial AWS Default Pipline Deployment
 - [x] Add in Teardown Parameter to destroy the deployment
+- [ ] DOCUMENNTATION!! 
 - [ ] Create Initial GCP Default Iglu Deployment
 - [ ] Create Initial GCP Default Pipline Deploymente
 - [ ] Additional Outputs for Prequisites
