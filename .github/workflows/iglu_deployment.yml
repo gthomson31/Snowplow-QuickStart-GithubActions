@@ -89,8 +89,6 @@ jobs:
           name: quickstart-examples
           path: ~/quickstart-examples/
 
-      - run: ls ~/quickstart-examples
-
       - name: Deploying the Terraform Stack
         run : |
             cd ~/quickstart-examples/terraform/aws/iglu_server/default
@@ -180,12 +178,11 @@ jobs:
           name: quickstart-examples
           path: ~/quickstart-examples/
 
-      - run: 
-          name: Patching Pipeline Vars File
-          command: |
+      - name: Patching Pipeline Vars File
+        run: |
             bash -x ./scripts/patch_pipeline_vars.sh
             echo "Terraform files have been patched with ENV Vars"
-         env:
+        env:
           AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
           AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
           AWS_DEFAULT_REGION: ${{secrets.AWS_DEFAULT_REGION}}
