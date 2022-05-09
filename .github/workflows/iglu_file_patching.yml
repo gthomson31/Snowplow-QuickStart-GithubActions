@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: ci
+name: Iglu Server Deployment
 
 # Controls when the workflow will run
 on:
@@ -16,7 +16,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  Iglu File Patching:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -39,5 +39,48 @@ jobs:
             cp terraform_files/iglu/versions.tf quickstart-examples/terraform/aws/iglu_server/default/versions.tf
             cat quickstart-examples/terraform/aws/iglu_server/default/versions.tf
             echo "Terraform version file has been patched to save state to S3"
+      - name: Archive quickstart-examples repo
+        uses: actions/upload-artifact@v3
+        with:
+          name: quickstart-examples
+          path: |
+            quickstart-examples
+
+
+  # This workflow contains a single job called "build"
+  Iglu Server Deployment:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    container:
+      image: hashicorp/terraform:1.0.0
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      # Runs a single command using the runners shell
+      - name: Download quickstart-examples
+        uses: actions/download-artifact@v3
+        with:
+          name: quickstart-examples
+
+      # Runs a set of commands using the runners shell
+      - name: Patching Iglu Vars File
+        run: |
+            bash -x ./scripts/patch_iglu_vars.sh
+            echo "Terraform files have been patched with ENV Vars"
+            
+      - name: Patching Terraform Versions File
+        run : |
+            cd quickstart-examples/terraform/aws/iglu_server/default
+            echo "My current workspace is : $(pwd)" 
+            echo "Lets Deploy the Server"
+            terraform init
+            terraform plan
+
+
+
+
 
 
