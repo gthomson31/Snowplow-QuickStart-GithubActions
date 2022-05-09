@@ -25,10 +25,21 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
+      - name: Store in cache
+        id: cache-action
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/quickstart-examples/**
+          key: multiple-files-${{ hashFiles('~/quickstart-examples/**') }}
+
       # Runs a single command using the runners shell
       - name: Clone Quickstart Repo
+        if: steps.cache-action.outputs.cache-hit != 'true'
         run: git clone https://github.com/snowplow/quickstart-examples.git ~/quickstart-examples
 
+      - name: Verify we have our cached file
+        run: ls ~/quickstart-examples
       # Runs a set of commands using the runners shell
       - name: Patching Iglu Vars File
         run: |
@@ -40,12 +51,7 @@ jobs:
             cat ~/quickstart-examples/terraform/aws/iglu_server/default/versions.tf
             echo "Terraform version file has been patched to save state to S3"
 
-      - name: Store in cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/quickstart-examples/**
-          key: multiple-files-${{ hashFiles('~/quickstart-examples/**') }}
+
 
   # This workflow contains a single job called "build"
   iglu_server_deployment:
