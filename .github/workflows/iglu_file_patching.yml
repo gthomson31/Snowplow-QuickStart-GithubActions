@@ -46,7 +46,7 @@ jobs:
       - uses: actions/upload-artifact@master
         with:
           name: quickstart-examples
-          path: ~/quickstart-examples/*
+          path: ~/quickstart-examples/
 
   # This workflow contains a single job called "build"
   iglu_server_deployment:
@@ -64,7 +64,7 @@ jobs:
       - uses: actions/download-artifact@master
         with:
           name: quickstart-examples
-          path: ~/quickstart-examples/*
+          path: ~/quickstart-examples/
 
       - run: ls ~/quickstart-examples
 
