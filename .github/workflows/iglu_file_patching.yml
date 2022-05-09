@@ -16,7 +16,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  Iglu File Patching:
+  iglu_file_patching:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -48,7 +48,7 @@ jobs:
 
 
   # This workflow contains a single job called "build"
-  Iglu Server Deployment:
+  iglu_server_deployment:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     container:
@@ -70,7 +70,7 @@ jobs:
         run: |
             bash -x ./scripts/patch_iglu_vars.sh
             echo "Terraform files have been patched with ENV Vars"
-            
+
       - name: Patching Terraform Versions File
         run : |
             cd quickstart-examples/terraform/aws/iglu_server/default
