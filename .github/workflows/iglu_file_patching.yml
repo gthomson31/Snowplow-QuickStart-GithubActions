@@ -40,12 +40,12 @@ jobs:
             cat ~/quickstart-examples/terraform/aws/iglu_server/default/versions.tf
             echo "Terraform version file has been patched to save state to S3"
 
-      - name: Cache quickstart-repo
-        uses: actions/cache@v3
+      - name: Store in cache
+        uses: actions/cache@v2
         with:
-          path: ~/quickstart-examples
-          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
-
+          path: |
+            ~/quickstart-examples/*
+          key: multiple-files-${{ hashFiles('cache_test/cache_test/**') }}
 
   # This workflow contains a single job called "build"
   iglu_server_deployment:
@@ -60,11 +60,16 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
-      - name: Resotre quickstart-repo
-        uses: actions/cache@v3
+      - name: Restore
+        uses: actions/cache@v2
         with:
-          path: ~/quickstart-examples
-          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+          path: |
+            ~/quickstart-examples/*
+          key: multiple-files-${{ hashFiles('cache_test/cache_test/**') }}
+          restore-keys: |
+            multiple-files-${{ hashFiles('cache_test/cache_test/**') }}
+            multiple-files-
+
       - run: ls ~/quickstart-examples
 
       - name: Patching Terraform Versions File
