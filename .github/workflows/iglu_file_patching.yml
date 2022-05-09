@@ -27,7 +27,7 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Clone Quickstart Repo
-        run: git clone https://github.com/snowplow/quickstart-examples.git
+        run: git clone https://github.com/snowplow/quickstart-examples.git ~/quickstart-examples
 
       # Runs a set of commands using the runners shell
       - name: Patching Iglu Vars File
@@ -36,15 +36,16 @@ jobs:
             echo "Terraform files have been patched with ENV Vars"
       - name: Patching Terraform Versions File
         run : |
-            cp terraform_files/iglu/versions.tf quickstart-examples/terraform/aws/iglu_server/default/versions.tf
-            cat quickstart-examples/terraform/aws/iglu_server/default/versions.tf
+            cp terraform_files/iglu/versions.tf ~/quickstart-examples/terraform/aws/iglu_server/default/versions.tf
+            cat ~/quickstart-examples/terraform/aws/iglu_server/default/versions.tf
             echo "Terraform version file has been patched to save state to S3"
-      - name: Archive quickstart-examples repo
-        uses: actions/upload-artifact@v3
-        with:
-          name: quickstart-examples
-          path: |
-            quickstart-examples
+
+      - name: Cache quickstart-repo
+        uses: actions/cache@v2
+          id: restore-build
+          with:
+            path: ~/quickstart-examples
+            key: ${{ github.sha }}
 
 
   # This workflow contains a single job called "build"
@@ -60,15 +61,16 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
-      # Runs a single command using the runners shell
-      - name: Download quickstart-examples
-        uses: actions/download-artifact@v3
+      - uses: actions/cache@v2
+        id: restore-build
         with:
-          name: quickstart-examples
+          path: ~/quickstart-examples
+          key: ${{ github.sha }}
+      - run: ls ~/quickstart-examples
 
       - name: Patching Terraform Versions File
         run : |
-            cd quickstart-examples/terraform/aws/iglu_server/default
+            cd ~/quickstart-examples/terraform/aws/iglu_server/default
             echo "My current workspace is : $(pwd)" 
             echo "Lets Deploy the Server"
             terraform init
