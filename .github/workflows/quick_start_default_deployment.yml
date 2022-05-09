@@ -93,7 +93,6 @@ jobs:
             echo "My current workspace is : $(pwd)" 
             echo "Lets Deploy the Server"
             terraform init 
-            terraform state list
 
       - name: Storing Terraform
         run : |
