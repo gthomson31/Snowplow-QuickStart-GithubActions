@@ -67,6 +67,8 @@ jobs:
         with:
           role-to-assume: ${{secrets.IAM_PERMISSIONS_BOUNDRY}}
           aws-region: ${{secrets.AWS_DEFAULT_REGION}}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - uses: actions/download-artifact@master
         with:
