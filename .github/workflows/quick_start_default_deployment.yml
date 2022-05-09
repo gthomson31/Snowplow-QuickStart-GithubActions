@@ -110,46 +110,46 @@ jobs:
           path: ~/quickstart-examples/
 
   # This workflow contains a single job called "build"
-  iglu-server-seeding:
-    needs: iglu-server-deployment
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-    container:
-      image: openjdk:oraclelinux8
+  # iglu-server-seeding:
+  #   needs: iglu-server-deployment
+  #   # The type of runner that the job will run on
+  #   runs-on: ubuntu-latest
+  #   container:
+  #     image: openjdk:oraclelinux8
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+  #   # Steps represent a sequence of tasks that will be executed as part of the job
+  #   steps:
+  #     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+  #     - uses: actions/checkout@v3
 
-      - uses: actions/download-artifact@master
-        with:
-          name: quickstart-examples
-          path: ~/quickstart-examples/
+  #     - uses: actions/download-artifact@master
+  #       with:
+  #         name: quickstart-examples
+  #         path: ~/quickstart-examples/
 
-      - name: Install utils
-        run: |
-          microdnf install -y tar unzip java wget git
+  #     - name: Install utils
+  #       run: |
+  #         microdnf install -y tar unzip java wget git
 
-      - name: Install IgluCLI
-        run: |
-          wget https://github.com/snowplow-incubator/igluctl/releases/download/0.8.1/igluctl_0.8.1.zip
-          unzip igluctl_0.8.1.zip
-          chmod +x igluctl
-          cp igluctl /usr/local/bin/
-          igluctl --version    
+  #     - name: Install IgluCLI
+  #       run: |
+  #         wget https://github.com/snowplow-incubator/igluctl/releases/download/0.8.1/igluctl_0.8.1.zip
+  #         unzip igluctl_0.8.1.zip
+  #         chmod +x igluctl
+  #         cp igluctl /usr/local/bin/
+  #         igluctl --version    
 
-      - name: Seed Iglu Server 
-        run: |
-            git clone https://github.com/snowplow/iglu-central ~/quickstart-examples/iglu-central
-            cd ~/quickstart-examples/iglu-central
-            export IGLU_URL=$(cat ~/quickstart-examples/terraform_outputs/iglu_server.txt| sed 's/"//g')
-            igluctl static push --public schemas/ http://$IGLU_URL ${{secrets.IGLU_API_KEY}}
+  #     - name: Seed Iglu Server 
+  #       run: |
+  #           git clone https://github.com/snowplow/iglu-central ~/quickstart-examples/iglu-central
+  #           cd ~/quickstart-examples/iglu-central
+  #           export IGLU_URL=$(cat ~/quickstart-examples/terraform_outputs/iglu_server.txt| sed 's/"//g')
+  #           igluctl static push --public schemas/ http://$IGLU_URL ${{secrets.IGLU_API_KEY}}
 
-      - uses: actions/upload-artifact@master
-        with:
-          name: quickstart-examples
-          path: ~/quickstart-examples/
+  #     - uses: actions/upload-artifact@master
+  #       with:
+  #         name: quickstart-examples
+  #         path: ~/quickstart-examples/
 
 
 
