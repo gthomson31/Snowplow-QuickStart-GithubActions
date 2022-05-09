@@ -92,8 +92,8 @@ jobs:
             cd ~/quickstart-examples/terraform/aws/iglu_server/default
             echo "My current workspace is : $(pwd)" 
             echo "Lets Deploy the Server"
-            terraform init
-            terraform destroy -auto-approve
+            terraform init -lock=false
+            terraform destroy -auto-approve 
 
       - name: Storing Terraform
         run : |
