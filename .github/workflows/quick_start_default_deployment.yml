@@ -189,9 +189,8 @@ jobs:
       - name: Deploying the Terraform Stack
         run : |
             cd ~/quickstart-examples/terraform/aws/pipeline/default
-            echo "My current workspace is : $(pwd)" 
-            echo "Lets Deploy the Server"
             terraform init
+            terraform plan -lock=false
             terraform destroy -auto-approve
 
   iglu-destroy:
@@ -221,9 +220,8 @@ jobs:
       - name: Deploying the Terraform Stack
         run : |
             cd ~/quickstart-examples/terraform/aws/iglu_server/default
-            echo "My current workspace is : $(pwd)" 
-            echo "Lets Deploy the Server"
             terraform init
+            terraform plan -lock=false
             terraform destroy -auto-approve
 
 
