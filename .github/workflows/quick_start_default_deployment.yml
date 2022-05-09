@@ -247,7 +247,6 @@ jobs:
 
       - name: Storing Terraform
         run : |
-            mkdir ~/quickstart-examples/terraform_outputs
             cd ~/quickstart-examples/terraform/aws/pipeline/default
             echo $(terraform output) > ~/quickstart-examples/terraform_outputs/pipeline_deployment.txt
             cat ~/quickstart-examples/terraform_outputs/pipeline_deployment.txt
