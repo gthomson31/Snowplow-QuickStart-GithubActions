@@ -190,8 +190,7 @@ jobs:
         run : |
             cd ~/quickstart-examples/terraform/aws/pipeline/default
             terraform init
-            terraform plan -lock=false
-            terraform destroy -auto-approve
+            terraform destroy -auto-approve -lock=false
 
   iglu-destroy:
     needs: iglu-server-deployment
@@ -221,9 +220,7 @@ jobs:
         run : |
             cd ~/quickstart-examples/terraform/aws/iglu_server/default
             terraform init
-            terraform plan -lock=false
-            terraform destroy -auto-approve
-
+            terraform destroy -auto-approve -lock=false
 
   # pipeline-deployment:
   #   needs: pipeline-variable-prep
