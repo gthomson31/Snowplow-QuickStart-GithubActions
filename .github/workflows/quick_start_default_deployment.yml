@@ -239,7 +239,7 @@ jobs:
 
       - name: Deploying the Terraform Stack
         run : |
-            cd ~/quickstart-examples/terraform/aws/iglu_server/default
+            cd ~/quickstart-examples/terraform/aws/pipeline/default
             echo "My current workspace is : $(pwd)" 
             echo "Lets Deploy the Server"
             terraform init
