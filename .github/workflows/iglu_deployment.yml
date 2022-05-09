@@ -91,7 +91,7 @@ jobs:
 
       - run: ls ~/quickstart-examples
 
-      - name: Patching Terraform Versions File
+      - name: Deploying the Terraform Stack
         run : |
             cd ~/quickstart-examples/terraform/aws/iglu_server/default
             echo "My current workspace is : $(pwd)" 
@@ -99,7 +99,7 @@ jobs:
             terraform init
             terraform apply -auto-approve
 
-      - name: Patching Terraform Versions File
+      - name: Storing Terraform
         run : |
             mkdir ~/quickstart-examples/terraform_outputs
             cd ~/quickstart-examples/terraform/aws/iglu_server/default
@@ -146,7 +146,7 @@ jobs:
             git clone https://github.com/snowplow/iglu-central ~/quickstart-examples/iglu-central
             cd ~/quickstart-examples/iglu-central
             export IGLU_URL=$(cat ~/quickstart-examples/terraform_outputs/iglu_server.txt| sed 's/"//g')
-            igluctl static push --public schemas/ http://$IGLU_URL $IGLU_API_KEY
+            igluctl static push --public schemas/ http://$IGLU_URL ${{secrets.IGLU_API_KEY}}
 
       - uses: actions/upload-artifact@master
         with:
