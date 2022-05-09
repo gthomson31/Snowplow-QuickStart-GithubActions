@@ -220,6 +220,8 @@ jobs:
         run : |
             cd ~/quickstart-examples/terraform/aws/iglu_server/default
             terraform init
+
+            echo "TRYING TO DESTROY"
             terraform destroy -auto-approve -lock=false
 
   # pipeline-deployment:
