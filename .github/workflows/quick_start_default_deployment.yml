@@ -93,7 +93,7 @@ jobs:
             echo "My current workspace is : $(pwd)" 
             echo "Lets Deploy the Server"
             terraform init
-            terraform destoy -auto-approve
+            terraform destroy -auto-approve
 
       - name: Storing Terraform
         run : |
