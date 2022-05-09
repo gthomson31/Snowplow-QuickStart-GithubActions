@@ -38,6 +38,20 @@ jobs:
             bash -x ./scripts/patch_iglu_vars.sh
             echo "Terraform files have been patched with ENV Vars"
             cat ~/quickstart-examples/terraform/aws/iglu_server/default/terraform.tfvars
+        env:
+          AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+          AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          AWS_DEFAULT_REGION: ${{secrets.AWS_DEFAULT_REGION}}
+          PREFIX: ${{secrets.PREFIX}}
+          VPC_ID: ${{secrets.VPC_ID}}
+          PUBLIC_SUBNET_1: ${{secrets.PUBLIC_SUBNET_1}}
+          PUBLIC_SUBNET_2: ${{secrets.PUBLIC_SUBNET_2}}
+          ALLOWED_IP: ${{secrets.ALLOWED_IP}}
+          SSH_PUBLIC_KEY: ${{secrets.SSH_PUBLIC_KEY}}
+          IGLU_DB_PASSWORD: ${{secrets.IGLU_DB_PASSWORD}}
+          IGLU_API_KEY: ${{secrets.IGLU_API_KEY}}
+          IAM_PERMISSIONS_BOUNDRY: ${{secrets.IAM_PERMISSIONS_BOUNDRY}}
+
       - name: Patching Terraform Versions File
         run : |
             cp terraform_files/iglu/versions.tf ~/quickstart-examples/terraform/aws/iglu_server/default/versions.tf
