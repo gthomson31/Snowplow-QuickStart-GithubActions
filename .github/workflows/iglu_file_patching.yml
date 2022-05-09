@@ -13,6 +13,10 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+env:
+  IAM_PERMISSIONS_BOUNDRY: IAM_PERMISSIONS_BOUNDRY
+  AWS_DEFAULT_REGION: AWS_DEFAULT_REGION
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
