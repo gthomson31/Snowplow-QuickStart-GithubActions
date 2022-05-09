@@ -17,7 +17,8 @@
 *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
-[![Iglu Server Deployment](https://github.com/gthomson31/Snowplow-QuickStart-GithubActions/actions/workflows/iglu_deployment.yml/badge.svg)](https://github.com/gthomson31/Snowplow-QuickStart-GithubActions/actions/workflows/iglu_deployment.yml)
+[![Quick Start Pipeline Deployment](https://github.com/gthomson31/Snowplow-QuickStart-GithubActions/actions/workflows/quick_start_default_deployment.yml/badge.svg)](https://github.com/gthomson31/Snowplow-QuickStart-GithubActions/actions/workflows/quick_start_default_deployment.yml)
+
 
 <!-- PROJECT LOGO -->
 ![Snowplow Logo](./media/snowplow_logo.png)
