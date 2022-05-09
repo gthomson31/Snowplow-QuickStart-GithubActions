@@ -41,11 +41,10 @@ jobs:
             echo "Terraform version file has been patched to save state to S3"
 
       - name: Cache quickstart-repo
-        id: restore-build
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/quickstart-examples
-          key: ${{ github.sha }}
+          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
 
 
   # This workflow contains a single job called "build"
@@ -61,12 +60,11 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
-      - name: Cache quickstart-repo
-        uses: actions/cache@v2
-        id: restore-build
+      - name: Resotre quickstart-repo
+        uses: actions/cache@v3
         with:
           path: ~/quickstart-examples
-          key: ${{ github.sha }}
+          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
       - run: ls ~/quickstart-examples
 
       - name: Patching Terraform Versions File
