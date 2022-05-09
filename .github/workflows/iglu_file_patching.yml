@@ -44,8 +44,8 @@ jobs:
         uses: actions/cache@v2
         with:
           path: |
-            ~/quickstart-examples/*
-          key: multiple-files-${{ hashFiles('cache_test/cache_test/**') }}
+            ~/quickstart-examples/**
+          key: multiple-files-${{ hashFiles('~/quickstart-examples/**') }}
 
   # This workflow contains a single job called "build"
   iglu_server_deployment:
@@ -65,9 +65,9 @@ jobs:
         with:
           path: |
             ~/quickstart-examples/*
-          key: multiple-files-${{ hashFiles('cache_test/cache_test/**') }}
+          key: multiple-files-${{ hashFiles('~/quickstart-examples/**') }}
           restore-keys: |
-            multiple-files-${{ hashFiles('cache_test/cache_test/**') }}
+            multiple-files-${{ hashFiles('~/quickstart-examples/**') }}
             multiple-files-
 
       - run: ls ~/quickstart-examples
