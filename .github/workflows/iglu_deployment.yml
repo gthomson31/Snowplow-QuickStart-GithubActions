@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Iglu Server Deployment
+name: Quick Start Pipeline Deployment
 
 # Controls when the workflow will run
 on:
@@ -16,7 +16,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  iglu_file_patching:
+  iglu-variable-prep:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -65,8 +65,8 @@ jobs:
           path: ~/quickstart-examples/
 
   # This workflow contains a single job called "build"
-  iglu_server_deployment:
-    needs: iglu_file_patching
+  iglu-server-deployment:
+    needs: iglu-file-patching
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     container:
@@ -112,8 +112,8 @@ jobs:
           path: ~/quickstart-examples/
 
   # This workflow contains a single job called "build"
-  iglu_server_seeding:
-    needs: iglu_server_deployment
+  iglu-server-seeding:
+    needs: iglu-server-deployment
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     container:
@@ -154,3 +154,108 @@ jobs:
           path: ~/quickstart-examples/
 
 
+
+
+
+
+  pipeline-variable-prep:
+    needs: iglu-server-deployment  
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: ${{secrets.AWS_DEFAULT_REGION}}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - uses: actions/download-artifact@master
+        with:
+          name: quickstart-examples
+          path: ~/quickstart-examples/
+
+      - run: 
+          name: Patching Pipeline Vars File
+          command: |
+            bash -x ./scripts/patch_pipeline_vars.sh
+            echo "Terraform files have been patched with ENV Vars"
+         env:
+          AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+          AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          AWS_DEFAULT_REGION: ${{secrets.AWS_DEFAULT_REGION}}
+          PREFIX: ${{secrets.PREFIX}}
+          VPC_ID: ${{secrets.VPC_ID}}
+          PUBLIC_SUBNET_1: ${{secrets.PUBLIC_SUBNET_1}}
+          PUBLIC_SUBNET_2: ${{secrets.PUBLIC_SUBNET_2}}
+          ALLOWED_IP: ${{secrets.ALLOWED_IP}}
+          SSH_PUBLIC_KEY: ${{secrets.SSH_PUBLIC_KEY}}
+          S3_DATA_BUCKET: ${{secrets.S3_DATA_BUCKET}}
+          IGLU_DB_PASSWORD: ${{secrets.IGLU_DB_PASSWORD}}
+          IGLU_API_KEY: ${{secrets.IGLU_API_KEY}}
+          IAM_PERMISSIONS_BOUNDRY: ${{secrets.IAM_PERMISSIONS_BOUNDRY}}
+
+
+      - name: Patching Terraform Versions File
+        run : |
+            cp terraform_files/iglu/versions.tf ~/quickstart-examples/terraform/aws/pipeline/default/versions.tf
+            cat ~/quickstart-examples/terraform/aws/pipeline/default/versions.tf
+            echo "Terraform version file has been patched to allow save state to S3"
+
+
+      - uses: actions/upload-artifact@master
+        with:
+          name: quickstart-examples
+          path: ~/quickstart-examples/
+
+  # This workflow contains a single job called "build"
+  pipeline_deployment:
+    needs: iglu_file_patching
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    container:
+      image: hashicorp/terraform:1.0.0
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: ${{secrets.AWS_DEFAULT_REGION}}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - uses: actions/download-artifact@master
+        with:
+          name: quickstart-examples
+          path: ~/quickstart-examples/
+
+      - run: ls ~/quickstart-examples
+
+      - name: Deploying the Terraform Stack
+        run : |
+            cd ~/quickstart-examples/terraform/aws/iglu_server/default
+            echo "My current workspace is : $(pwd)" 
+            echo "Lets Deploy the Server"
+            terraform init
+            terraform apply -auto-approve
+
+      - name: Storing Terraform
+        run : |
+            mkdir ~/quickstart-examples/terraform_outputs
+            cd ~/quickstart-examples/terraform/aws/pipeline/default
+            echo $(terraform output) > ~/quickstart-examples/terraform_outputs/pipeline_deployment.txt
+            cat ~/quickstart-examples/terraform_outputs/pipeline_deployment.txt
+
+      - uses: actions/upload-artifact@master
+        with:
+          name: quickstart-examples
+          path: ~/quickstart-examples/
