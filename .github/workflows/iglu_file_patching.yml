@@ -68,8 +68,8 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: ${{env.IAM_PERMISSIONS_BOUNDRY}}
-          aws-region: ${{env.AWS_DEFAULT_REGION}}
+          role-to-assume: ${{secrets.IAM_PERMISSIONS_BOUNDRY}}
+          aws-region: ${{secrets.AWS_DEFAULT_REGION}}
 
       - uses: actions/download-artifact@master
         with:
