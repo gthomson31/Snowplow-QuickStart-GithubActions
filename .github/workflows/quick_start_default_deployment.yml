@@ -15,7 +15,6 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   iglu-variable-prep:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -64,7 +63,6 @@ jobs:
           name: quickstart-examples
           path: ~/quickstart-examples/
 
-  # This workflow contains a single job called "build"
   iglu-server-deployment:
     needs: iglu-variable-prep
     # The type of runner that the job will run on
@@ -95,7 +93,7 @@ jobs:
             echo "My current workspace is : $(pwd)" 
             echo "Lets Deploy the Server"
             terraform init
-            terraform apply -auto-approve
+            terraform destoy -auto-approve
 
       - name: Storing Terraform
         run : |
@@ -108,50 +106,6 @@ jobs:
         with:
           name: quickstart-examples
           path: ~/quickstart-examples/
-
-  # This workflow contains a single job called "build"
-  # iglu-server-seeding:
-  #   needs: iglu-server-deployment
-  #   # The type of runner that the job will run on
-  #   runs-on: ubuntu-latest
-  #   container:
-  #     image: openjdk:oraclelinux8
-
-  #   # Steps represent a sequence of tasks that will be executed as part of the job
-  #   steps:
-  #     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-  #     - uses: actions/checkout@v3
-
-  #     - uses: actions/download-artifact@master
-  #       with:
-  #         name: quickstart-examples
-  #         path: ~/quickstart-examples/
-
-  #     - name: Install utils
-  #       run: |
-  #         microdnf install -y tar unzip java wget git
-
-  #     - name: Install IgluCLI
-  #       run: |
-  #         wget https://github.com/snowplow-incubator/igluctl/releases/download/0.8.1/igluctl_0.8.1.zip
-  #         unzip igluctl_0.8.1.zip
-  #         chmod +x igluctl
-  #         cp igluctl /usr/local/bin/
-  #         igluctl --version    
-
-  #     - name: Seed Iglu Server 
-  #       run: |
-  #           git clone https://github.com/snowplow/iglu-central ~/quickstart-examples/iglu-central
-  #           cd ~/quickstart-examples/iglu-central
-  #           export IGLU_URL=$(cat ~/quickstart-examples/terraform_outputs/iglu_server.txt| sed 's/"//g')
-  #           igluctl static push --public schemas/ http://$IGLU_URL ${{secrets.IGLU_API_KEY}}
-
-  #     - uses: actions/upload-artifact@master
-  #       with:
-  #         name: quickstart-examples
-  #         path: ~/quickstart-examples/
-
-
 
   pipeline-variable-prep:
     needs: iglu-server-deployment  
@@ -207,55 +161,9 @@ jobs:
           name: quickstart-examples
           path: ~/quickstart-examples/
 
-  # This workflow contains a single job called "build"
-  pipeline-deployment:
-    needs: pipeline-variable-prep
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-    container:
-      image: hashicorp/terraform:1.0.0
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-region: ${{secrets.AWS_DEFAULT_REGION}}
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
-      - uses: actions/download-artifact@master
-        with:
-          name: quickstart-examples
-          path: ~/quickstart-examples/
-
-      - run: ls ~/quickstart-examples
-
-      - name: Deploying the Terraform Stack
-        run : |
-            cd ~/quickstart-examples/terraform/aws/pipeline/default
-            echo "My current workspace is : $(pwd)" 
-            echo "Lets Deploy the Server"
-            terraform init
-            terraform apply -auto-approve
-
-      - name: Storing Terraform
-        run : |
-            cd ~/quickstart-examples/terraform/aws/pipeline/default
-            echo $(terraform output) > ~/quickstart-examples/terraform_outputs/pipeline_deployment.txt
-            cat ~/quickstart-examples/terraform_outputs/pipeline_deployment.txt
-
-      - uses: actions/upload-artifact@master
-        with:
-          name: quickstart-examples
-          path: ~/quickstart-examples/
-
 
   pipeline-destroy:
-    needs: pipeline-deployment
+    needs: pipeline-variable-prep
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     container:
@@ -286,10 +194,8 @@ jobs:
             terraform init
             terraform destroy -auto-approve
 
-
-
   iglu-destroy:
-    needs: pipeline-deployment
+    needs: iglu-server-deployment
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     container:
@@ -319,3 +225,93 @@ jobs:
             echo "Lets Deploy the Server"
             terraform init
             terraform destroy -auto-approve
+
+
+  # pipeline-deployment:
+  #   needs: pipeline-variable-prep
+  #   # The type of runner that the job will run on
+  #   runs-on: ubuntu-latest
+  #   container:
+  #     image: hashicorp/terraform:1.0.0
+
+  #   # Steps represent a sequence of tasks that will be executed as part of the job
+  #   steps:
+  #     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+  #     - uses: actions/checkout@v3
+
+  #     - name: Configure AWS Credentials
+  #       uses: aws-actions/configure-aws-credentials@v1
+  #       with:
+  #         aws-region: ${{secrets.AWS_DEFAULT_REGION}}
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+  #     - uses: actions/download-artifact@master
+  #       with:
+  #         name: quickstart-examples
+  #         path: ~/quickstart-examples/
+
+  #     - run: ls ~/quickstart-examples
+
+  #     - name: Deploying the Terraform Stack
+  #       run : |
+  #           cd ~/quickstart-examples/terraform/aws/pipeline/default
+  #           echo "My current workspace is : $(pwd)" 
+  #           echo "Lets Deploy the Server"
+  #           terraform init
+  #           terraform apply -auto-approve
+
+  #     - name: Storing Terraform
+  #       run : |
+  #           cd ~/quickstart-examples/terraform/aws/pipeline/default
+  #           echo $(terraform output) > ~/quickstart-examples/terraform_outputs/pipeline_deployment.txt
+  #           cat ~/quickstart-examples/terraform_outputs/pipeline_deployment.txt
+
+  #     - uses: actions/upload-artifact@master
+  #       with:
+  #         name: quickstart-examples
+  #         path: ~/quickstart-examples/
+
+
+  # This workflow contains a single job called "build"
+  # iglu-server-seeding:
+  #   needs: iglu-server-deployment
+  #   # The type of runner that the job will run on
+  #   runs-on: ubuntu-latest
+  #   container:
+  #     image: openjdk:oraclelinux8
+
+  #   # Steps represent a sequence of tasks that will be executed as part of the job
+  #   steps:
+  #     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+  #     - uses: actions/checkout@v3
+
+  #     - uses: actions/download-artifact@master
+  #       with:
+  #         name: quickstart-examples
+  #         path: ~/quickstart-examples/
+
+  #     - name: Install utils
+  #       run: |
+  #         microdnf install -y tar unzip java wget git
+
+  #     - name: Install IgluCLI
+  #       run: |
+  #         wget https://github.com/snowplow-incubator/igluctl/releases/download/0.8.1/igluctl_0.8.1.zip
+  #         unzip igluctl_0.8.1.zip
+  #         chmod +x igluctl
+  #         cp igluctl /usr/local/bin/
+  #         igluctl --version    
+
+  #     - name: Seed Iglu Server 
+  #       run: |
+  #           git clone https://github.com/snowplow/iglu-central ~/quickstart-examples/iglu-central
+  #           cd ~/quickstart-examples/iglu-central
+  #           export IGLU_URL=$(cat ~/quickstart-examples/terraform_outputs/iglu_server.txt| sed 's/"//g')
+  #           igluctl static push --public schemas/ http://$IGLU_URL ${{secrets.IGLU_API_KEY}}
+
+  #     - uses: actions/upload-artifact@master
+  #       with:
+  #         name: quickstart-examples
+  #         path: ~/quickstart-examples/
+
