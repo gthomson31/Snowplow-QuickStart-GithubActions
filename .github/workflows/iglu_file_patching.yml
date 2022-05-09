@@ -37,12 +37,13 @@ jobs:
         run: |
             bash -x ./scripts/patch_iglu_vars.sh
             echo "Terraform files have been patched with ENV Vars"
+            cat ~/quickstart-examples/terraform/aws/iglu_server/default/terraform.tfvars
       - name: Patching Terraform Versions File
         run : |
             cp terraform_files/iglu/versions.tf ~/quickstart-examples/terraform/aws/iglu_server/default/versions.tf
             cat ~/quickstart-examples/terraform/aws/iglu_server/default/versions.tf
             echo "Terraform version file has been patched to save state to S3"
-            echo "The API key is:${{secrets.AWS_DEFAULT_REGION}}"  
+
 
       - uses: actions/upload-artifact@master
         with:
