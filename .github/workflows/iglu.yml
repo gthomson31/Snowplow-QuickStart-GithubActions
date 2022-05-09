@@ -35,7 +35,7 @@ jobs:
             bash -x ./scripts/patch_iglu_vars.sh
             echo "Terraform files have been patched with ENV Vars"
       - name: Patching Terraform Versions File
-          run : |
+        run : |
             cp terraform_files/iglu/versions.tf quickstart-examples/terraform/aws/iglu_server/default/versions.tf
             cat quickstart-examples/terraform/aws/iglu_server/default/versions.tf
             echo "Terraform version file has been patched to save state to S3"
