@@ -56,6 +56,14 @@ jobs:
     container:
       image: hashicorp/terraform:1.0.0
 
+
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: $IAM_PERMISSIONS_BOUNDRY
+        aws-region: $AWS_DEFAULT_REGION
+
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -75,7 +83,6 @@ jobs:
             echo "Lets Deploy the Server"
             terraform init
             terraform plan
-
 
 
 
