@@ -219,7 +219,7 @@ jobs:
       - name: Deploying the Terraform Stack
         run : |
             cd ~/quickstart-examples/terraform/aws/iglu_server/default
-            terraform init
+            terraform init -lock=false
 
             echo "TRYING TO DESTROY"
             terraform destroy -auto-approve -lock=false
